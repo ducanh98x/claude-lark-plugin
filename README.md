@@ -48,10 +48,10 @@ Unknown/misspelled tool or preset names fail **silently** in `lark-mcp` (no erro
 ```bash
 npm install --prefix server @larksuiteoapi/lark-mcp@0.5.1
 npx @anthropic-ai/mcpb validate manifest.json
-npx @anthropic-ai/mcpb pack
+npx @anthropic-ai/mcpb pack . lark.mcpb
 ```
 
-Produces `lark.mcpb` in the project root. `server/node_modules` is gitignored — always re-run `npm install --prefix server` after a fresh clone before packing.
+`pack`'s output filename defaults to the current directory's name (e.g. `claude-lark-plugin.mcpb`), not the manifest's `name` field — pass `. lark.mcpb` explicitly, as above, to get `lark.mcpb` in the project root. `server/node_modules` is gitignored — always re-run `npm install --prefix server` after a fresh clone before packing.
 
 ### Updating the vendored version
 

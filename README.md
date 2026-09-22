@@ -21,7 +21,7 @@ This repo ships **two independent ways to install it** — pick one:
 
 ## A. Install as a Desktop Extension (MCPB)
 
-1. Build the bundle (see below) to get `lark.mcpb`, or download a prebuilt release.
+1. Download [`lark.mcpb`](./lark.mcpb) directly from this repo, or build it yourself (see below).
 2. Drag `lark.mcpb` onto Claude Desktop, or Settings → Extensions → Install from file.
 3. When prompted, enter your Lark **App ID** and **App Secret**. These are stored encrypted by Claude Desktop (OS keychain/credential manager) — they are never written to this repo, never appear in chat, and never pass through any script here.
 4. Confirm the "Lark (Feishu)" MCP server shows as connected. Its tools are available in both the Chat tab and the Cowork/Code tab automatically.

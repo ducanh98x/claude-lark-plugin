@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/mcpb/main/schemas/mcpb-manifest-v0.4.schema.json",
+  "manifest_version": "0.4",
+  "name": "lark",
+  "display_name": "Lark (Feishu)",
+  "version": "0.1.1",
+  "description": "Connect Claude to LarkSuite — messaging, docs, Bitable/Base, calendar, and tasks.",
+  "long_description": "Wraps the official `@larksuiteoapi/lark-mcp` MCP server (larksuite/lark-openapi-mcp) so Claude can read and act on Lark/Feishu messaging, docs, Bitable/Base records, calendar events, and tasks. No fork, no reimplementation — this bundle vendors the official package unmodified. Enter your Lark custom app's App ID and App Secret when installing; they are stored encrypted by Claude Desktop and never appear in chat, logs, or this repository.",
+  "author": {
+    "name": "ducanh98x"
+  },
+  "icon": "icon.png",
+  "keywords": ["lark", "larksuite", "feishu", "mcp", "messaging", "docs", "bitable", "calendar", "tasks"],
+  "license": "MIT",
+  "homepage": "https://github.com/ducanh98x/claude-lark-plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ducanh98x/claude-lark-plugin"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "server/node_modules/@larksuiteoapi/lark-mcp/dist/cli.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/node_modules/@larksuiteoapi/lark-mcp/dist/cli.js",
+        "mcp",
+        "-d", "https://open.larksuite.com",
+        "-t", "preset.default,preset.calendar.default,preset.task.default"
+      ],
+      "env": {
+        "APP_ID": "${user_config.appId}",
+        "APP_SECRET": "${user_config.appSecret}"
+      }
+    }
+  },
+  "user_config": {
+    "appId": {
+      "type": "string",
+      "title": "Lark App ID",
+      "description": "App ID from your custom app on the Lark Open Platform console (open.larksuite.com).",
+      "required": true
+    },
+    "appSecret": {
+      "type": "string",
+      "title": "Lark App Secret",
+      "description": "App Secret for the same app. Stored encrypted in your OS keychain/credential manager, never in plaintext.",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": { "node": ">=18" }
+  }
+}

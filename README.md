@@ -1,6 +1,6 @@
 # Lark / Feishu integration for Claude
 
-Connects Claude to LarkSuite — messaging, docs, Bitable/Base, calendar, and tasks — by wrapping the **official** `@larksuiteoapi/lark-mcp` MCP server ([larksuite/lark-openapi-mcp](https://github.com/larksuite/lark-openapi-mcp)). No fork, no reimplementation — `server/node_modules/@larksuiteoapi/lark-mcp` is the vendored upstream package, unmodified, shared by both install paths below.
+Connects Claude to LarkSuite — messaging, docs, Bitable/Base, calendar, and tasks — by wrapping the **official** `@larksuiteoapi/lark-mcp` MCP server ([larksuite/lark-openapi-mcp](https://github.com/larksuite/lark-openapi-mcp)). No fork, no reimplementation. Path A vendors the package unmodified inside the `.mcpb` bundle; path B runs it via a pinned `npx` invocation (no vendored copy in git — `server/node_modules` is only needed locally when building the `.mcpb`).
 
 Tested against `@larksuiteoapi/lark-mcp@0.5.1` (latest on npm at time of writing — re-check before bumping, see "Updating the vendored version" below).
 
@@ -9,7 +9,7 @@ This repo ships **two independent ways to install it** — pick one:
 | | Install path | Where it works | Credential entry |
 |---|---|---|---|
 | A | [`.mcpb` Desktop Extension](#a-install-as-a-desktop-extension-mcpb) | Claude Desktop (Chat tab *and* Cowork/Code tab — same app, shared extension) | Native form in Claude Desktop, stored in OS keychain |
-| B | [Plugin marketplace](#b-install-as-a-claude-codecowork-plugin) | Claude Code / Cowork specifically (CLI or any host with the plugin system) | Environment variables you set yourself |
+| B | [Plugin marketplace](#b-install-as-a-claude-codecowork-plugin) | Claude Code / Cowork specifically (CLI or any host with the plugin system) | Settings → Plugins → Yours → Lark → lark, fill in the `APP_ID`/`APP_SECRET` fields shown there |
 
 **Don't install both at once** — they'd register two separate `lark` MCP servers and collide. (A) already works inside Cowork with zero extra setup, so it's the simpler default; use (B) only if you specifically want the marketplace-based plugin workflow (e.g. `claude plugin install`, sharing via a marketplace listing) instead of the Desktop Extension UI.
 
@@ -35,14 +35,9 @@ claude plugin marketplace add ducanh98x/claude-lark-plugin
 claude plugin install lark@claude-lark-plugin
 ```
 
-Then set credentials as environment variables **before launching Claude** (the plugin's `.mcp.json` reads `LARK_APP_ID`/`LARK_APP_SECRET` — there's no credential-entry UI in the plugin system, unlike the MCPB path):
+Then open Claude Desktop → Settings → Plugins → Yours → Lark → **lark**, and fill in the `APP_ID` and `APP_SECRET` fields shown there directly — Claude Desktop reads the `env` keys declared in this plugin's `.mcp.json` and renders one input per key, storing the values itself. No shell `export`, no `.env` file, nothing to set outside the app. Reconnect the server (or restart Claude) after saving if it doesn't pick the values up immediately.
 
-```bash
-export LARK_APP_ID="cli_xxxxxxxxxxxx"
-export LARK_APP_SECRET="your_app_secret"
-```
-
-Add those two lines to your shell profile (`~/.zshrc`/`~/.zprofile`) for them to persist. **Caveat:** if you launch Claude Desktop from the Dock/Spotlight (not from a terminal), it may not inherit shell-profile exports on macOS — on macOS you can instead set them process-wide with `launchctl setenv LARK_APP_ID ...` / `launchctl setenv LARK_APP_SECRET ...` before starting the app. This path only registers the MCP server for Claude Code/Cowork, not for the plain Claude Desktop chat UI — use path (A) for that.
+This path only registers the MCP server for Claude Code/Cowork, not for the plain Claude Desktop chat UI — use path (A) for that.
 
 ## Verify the tool list (important)
 
@@ -89,13 +84,13 @@ File upload/download and direct Lark Docs editing support were not confirmed eit
 
 ```
 claude-lark-plugin/
-├── manifest.json              # MCPB manifest (path A)
+├── manifest.json              # MCPB manifest (path A) — spawns the vendored server/node_modules copy
 ├── icon.png
+├── server/node_modules/       # vendored @larksuiteoapi/lark-mcp — gitignored, only built locally for path A's .mcpb
 ├── .claude-plugin/
 │   ├── marketplace.json       # marketplace catalog (path B) — the file `claude plugin marketplace add` looks for
 │   └── plugin.json            # plugin manifest (path B)
-├── .mcp.json                  # MCP server config for path B, reads LARK_APP_ID/LARK_APP_SECRET env vars
-└── server/node_modules/       # vendored @larksuiteoapi/lark-mcp, shared by both A and B
+└── .mcp.json                  # MCP server config for path B — spawns a pinned `npx @larksuiteoapi/lark-mcp@0.5.1`, no vendored files needed
 ```
 
-Both `manifest.json` (MCPB) and `.mcp.json` (plugin) point at the same `server/node_modules/@larksuiteoapi/lark-mcp/dist/cli.js` — one vendored copy, two ways to launch it.
+Path A (`manifest.json`) and path B (`.mcp.json`) both launch the same upstream package at the same pinned version, just via two different mechanisms — bundled for the `.mcpb`, `npx`-resolved for the plugin (git-installed plugins don't get gitignored files like `node_modules`, so path B can't rely on the vendored copy).

@@ -1,10 +1,9 @@
 {
   "mcpServers": {
     "lark": {
-      "command": "node",
+      "command": "npx",
       "args": [
-        "${CLAUDE_PLUGIN_ROOT}/server/node_modules/@larksuiteoapi/lark-mcp/dist/cli.js",
-        "mcp",
+        "-y", "@larksuiteoapi/lark-mcp@0.5.1", "mcp",
         "-d", "https://open.larksuite.com",
         "-t", "preset.default,preset.calendar.default,preset.task.default"
       ],

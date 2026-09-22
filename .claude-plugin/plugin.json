@@ -1,0 +1,12 @@
+{
+  "name": "lark",
+  "version": "0.1.0",
+  "description": "Connect Claude to LarkSuite — messaging, docs, Bitable/Base, calendar, and tasks.",
+  "author": {
+    "name": "ducanh98x"
+  },
+  "homepage": "https://github.com/ducanh98x/claude-lark-plugin",
+  "repository": "https://github.com/ducanh98x/claude-lark-plugin",
+  "license": "MIT",
+  "keywords": ["lark", "larksuite", "feishu", "mcp", "messaging", "docs", "bitable", "calendar", "tasks"]
+}

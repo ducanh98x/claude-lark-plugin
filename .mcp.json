@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "lark": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/server/node_modules/@larksuiteoapi/lark-mcp/dist/cli.js",
+        "mcp",
+        "-d", "https://open.larksuite.com",
+        "-t", "preset.default,preset.calendar.default,preset.task.default"
+      ],
+      "env": {
+        "APP_ID": "${LARK_APP_ID}",
+        "APP_SECRET": "${LARK_APP_SECRET}"
+      }
+    }
+  }
+}

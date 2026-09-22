@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-lark-plugin",
+  "description": "Marketplace for the Lark/Feishu MCP plugin — messaging, docs, Bitable/Base, calendar, and tasks.",
+  "owner": {
+    "name": "ducanh98x"
+  },
+  "plugins": [
+    {
+      "name": "lark",
+      "description": "Connect Claude to LarkSuite — messaging, docs, Bitable/Base, calendar, and tasks via the official Lark OpenAPI MCP server (larksuite/lark-openapi-mcp), vendored unmodified.",
+      "author": {
+        "name": "ducanh98x"
+      },
+      "category": "productivity",
+      "source": ".",
+      "homepage": "https://github.com/ducanh98x/claude-lark-plugin"
+    }
+  ]
+}
